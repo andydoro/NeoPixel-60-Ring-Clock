@@ -20,6 +20,9 @@ If you are more familiar with Arduino, you can use the DC Boarduino and perfboar
 
 You will need a USB/TTL Serial adapter to program the DC Boarduino.  The programming header on the Boarduino is compatible with an FTDI Cable or our FTDI Friend.
 
+
+This project requires the Adafruit_NeoPixel and RTC libraries.
+
 For more information visit:
 
 http://andydoro.com/ringclock/
