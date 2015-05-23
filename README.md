@@ -26,4 +26,5 @@ This project requires the Adafruit_NeoPixel and RTC libraries.
 For more information visit:
 
 http://andydoro.com/ringclock/
+
 https://learn.adafruit.com/neopixel-60-ring-clock/overview
