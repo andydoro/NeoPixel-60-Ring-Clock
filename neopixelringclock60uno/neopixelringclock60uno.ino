@@ -1,5 +1,5 @@
 /**************************************************************************
- *                                                                     	*  	 
+ *                                                                     	*
  *   NeoPixel Ring Clock                                               	*
  *   by Andy Doro (mail@andydoro.com)                                 	*
  *   http://andydoro.com/ringclock/                                   	*
@@ -11,6 +11,7 @@
  *
  * Date 	 By    What
  * 20140320 	AFD 	First draft
+ * 20160105   AFD   faded arcs
  */
 
 // include the library code:
@@ -41,9 +42,9 @@ void setup () {
   pinMode(NEOPIN, OUTPUT);
 
   if (! RTC.isrunning()) {
-	Serial.println("RTC is NOT running!");
-	// following line sets the RTC to the date & time this sketch was compiled
-	RTC.adjust(DateTime(__DATE__, __TIME__));
+    Serial.println("RTC is NOT running!");
+    // following line sets the RTC to the date & time this sketch was compiled
+    RTC.adjust(DateTime(__DATE__, __TIME__));
   }
 
   strip.begin();
@@ -72,35 +73,39 @@ void loop () {
   secondval = Clock.second();  // get seconds
   minuteval = Clock.minute();  // get minutes
   hourval = Clock.hour();  	// get hours
-  if(hourval > 11) hourval -= 12; // This clock is 12 hour, if 13-23, convert to 0-11
+  if (hourval > 11) hourval -= 12; // This clock is 12 hour, if 13-23, convert to 0-11
 
-  hourval = (hourval*60 + minuteval) / 12;  //each red dot represent 24 minutes.
+  hourval = (hourval * 60 + minuteval) / 12; //each red dot represent 24 minutes.
 
   // arc mode
-  for(uint8_t i=0; i<strip.numPixels(); i++) {
+  for (uint8_t i = 0; i < strip.numPixels(); i++) {
 
-	if (i <= secondval) {
-  	pixelColorBlue = 255;
-	}
-	else {
-  	pixelColorBlue = 0;
-	}
+    if (i <= secondval) {
+      // calculates a faded arc from low to maximum brightness
+      pixelColorBlue = (i + 1) * (255 / (secondval + 1));
+      //pixelColorBlue = 255;
+    }
+    else {
+      pixelColorBlue = 0;
+    }
 
-	if (i <= minuteval) {
-  	pixelColorGreen = 255;  
-	}
-	else {
-  	pixelColorGreen = 0;
-	}
+    if (i <= minuteval) {
+      pixelColorGreen = (i + 1) * (255 / (minuteval + 1));
+      //pixelColorGreen = 255;
+    }
+    else {
+      pixelColorGreen = 0;
+    }
 
-	if (i <= hourval) {
-  	pixelColorRed = 255;   
-	}
-	else {
-  	pixelColorRed = 0;
-	}
+    if (i <= hourval) {
+      pixelColorRed = (i + 1) * (255 / (hourval + 1));
+      //pixelColorRed = 255;
+    }
+    else {
+      pixelColorRed = 0;
+    }
 
-	strip.setPixelColor(i, strip.Color(pixelColorRed, pixelColorGreen, pixelColorBlue));
+    strip.setPixelColor(i, strip.Color(pixelColorRed, pixelColorGreen, pixelColorBlue));
   }
 
   /*
@@ -114,7 +119,7 @@ void loop () {
 
   //display
   strip.show();
- 
+
   // wait
   delay(100);
 
@@ -123,9 +128,9 @@ void loop () {
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-	strip.setPixelColor(i, c);
-	strip.show();
-	delay(wait);
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+    strip.show();
+    delay(wait);
   }
 }
