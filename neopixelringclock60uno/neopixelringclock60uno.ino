@@ -64,8 +64,8 @@ void setup () {
 void loop () {
 
 
-  char* colon = ":"; // static characters save a bit
-  char* slash = "/"; // of memory
+  char const * colon = ":"; // static characters save a bit
+  char const * slash = "/"; // of memory
 
   // get time
   Clock = RTC.now(); // get the RTC time
