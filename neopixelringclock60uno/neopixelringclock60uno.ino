@@ -10,8 +10,10 @@
  * Revision History
  *
  * Date 	 By    What
- * 20140320 	AFD 	First draft
- * 20160105   AFD   faded arcs
+ * 20140320  AFD   first draft
+ * 20160105  AFD   faded arcs
+ * 20160916  AFD   Trinket compatible
+ *
  */
 
 // include the library code:
@@ -20,9 +22,9 @@
 #include <Adafruit_NeoPixel.h>
 
 // define pins
-#define NEOPIN 6
+#define NEOPIN 3
 
-#define BRIGHTNESS 64 // set max brightness
+#define BRIGHTNESS 64 // set max brightness 0-255
 
 RTC_DS1307 RTC; // Establish clock object
 DateTime Clock; // Holds current clock time
@@ -34,8 +36,8 @@ byte hourval, minuteval, secondval; // holds the time
 byte pixelColorRed, pixelColorGreen, pixelColorBlue; // holds color values
 
 void setup () {
-  Wire.begin();        	// Begin I2C
-  RTC.begin();   // begin clock
+  Wire.begin();   // Begin I2C
+  RTC.begin();    // begin clock
 
   //Serial.begin(9600);
   // set pinmodes
