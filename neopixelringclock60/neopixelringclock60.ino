@@ -10,15 +10,18 @@
    Revision History
 
    Date      By    What
-   20140320    AFD   First draft
-   20160105    AFD   Faded arcs
-   20160916    AFD   Trinket compatible
-   20170727    AFD   added STARTPIXEL for 3D enclosure, variable starting point, added automatic DST support
+   20140320  AFD   First draft
+   20160105  AFD   Faded arcs
+   20160916  AFD   Trinket compatible
+   20170727  AFD   added STARTPIXEL for 3D enclosure, variable starting point, added automatic DST support
+   20180424  AFD   using DST library https://github.com/andydoro/DST_RTC
 */
 
 // include the library code:
 #include <Wire.h>
 #include <RTClib.h>
+#include "DST_RTC.h" // download from https://github.com/andydoro/DST_RTC
+
 #include <Adafruit_NeoPixel.h>
 
 // define pins
@@ -26,46 +29,38 @@
 
 #define BRIGHTNESS 64 // set max brightness
 
-#define STARTPIXEL 0 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
+#define STARTPIXEL 33 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
 
-// Do you live in a country or territory that observes Daylight Saving Time?
-// https://en.wikipedia.org/wiki/Daylight_saving_time_by_country
-// Use 1 if you observe DST, 0 if you don't. This is programmed for DST in the US / Canada. If your territory's DST operates differently,
-// you'll need to modify the code in the calcTheTime() function to make this work properly.
-#define OBSERVE_DST 1
+RTC_DS1307 rtc; // Establish clock object
 
-RTC_DS1307 RTC; // Establish clock object
-DateTime theTime; // Holds current clock time
+DST_RTC dst_rtc; // DST object
+
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, NEOPIN, NEO_GRB + NEO_KHZ800); // strip object
-
-byte hourval, minuteval, secondval; // holds the time
 
 byte pixelColorRed, pixelColorGreen, pixelColorBlue; // holds color values
 
 void setup () {
   Wire.begin();  // Begin I2C
-  RTC.begin();   // begin clock
+  rtc.begin();   // begin clock
 
   //Serial.begin(9600);
   // set pinmodes
   pinMode(NEOPIN, OUTPUT);
 
-
-  if (! RTC.isrunning()) {
-    //Serial.println("RTC is NOT running!");
+  if (! rtc.isrunning()) {
+//    Serial.println("RTC is NOT running!");
     // following line sets the RTC to the date & time this sketch was compiled
-    RTC.adjust(DateTime(__DATE__, __TIME__));
-    theTime = RTC.now();
+    rtc.adjust(DateTime(__DATE__, __TIME__));
     // DST? If we're in it, let's subtract an hour from the RTC time to keep our DST calculation correct. This gives us
     // Standard Time which our DST check will add an hour back to if we're in DST.
-    if (OBSERVE_DST == 1) {
-      if (checkDst() == true) { // check whether we're in DST right now. If we are, subtract an hour.
-        theTime = theTime.unixtime() - 3600;
-      }
+    DateTime standardTime = rtc.now();
+    if (dst_rtc.checkDST(standardTime) == true) { // check whether we're in DST right now. If we are, subtract an hour.
+      standardTime = standardTime.unixtime() - 3600;
     }
-    RTC.adjust(theTime);
+    rtc.adjust(standardTime);
   }
+
 
   strip.begin();
   //strip.show(); // Initialize all pixels to 'off'
@@ -83,18 +78,12 @@ void setup () {
 
 void loop () {
 
-
-  char* colon = ":"; // static characters save a bit
-  char* slash = "/"; // of memory
-
   // get time
-  //Clock = RTC.now(); // get the RTC time
-  theTime = calculateTime(); // takes into account DST
+  DateTime theTime = dst_rtc.calculateTime(rtc.now()); // takes into account DST
 
-  secondval = theTime.second();  // get seconds
-  minuteval = theTime.minute();  // get minutes
-  hourval = theTime.hour();   // get hours
-  //if (hourval > 11) hourval -= 12;
+  byte secondval = theTime.second();  // get seconds
+  byte minuteval = theTime.minute();  // get minutes
+  int hourval = theTime.hour();   // get hours
   hourval = hourval % 12; // This clock is 12 hour, if 13-23, convert to 0-11`
 
   hourval = (hourval * 60 + minuteval) / 12; //each red dot represent 24 minutes.
@@ -157,3 +146,4 @@ void colorWipe(uint32_t c, uint8_t wait) {
     delay(wait);
   }
 }
+
