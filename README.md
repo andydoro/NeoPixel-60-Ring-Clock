@@ -18,10 +18,17 @@ If you are new to microcontrollers and Arduino, I would recommend starting out b
 
 If you are more familiar with Arduino, you can use a Trinket 5V and perfboard to build a more permanent electronics project.
 
-This project requires the Adafruit_NeoPixel and RTC libraries. It uses a DST library to keep tracks of changes: https://github.com/andydoro/DST_RTC
+Required Libraries:
+
+* [Adafruit_NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)
+* [RTClib](https://github.com/adafruit/RTClib)
+* [DST_RTC](https://github.com/andydoro/DST_RTC)
+
+
+3D enclosure created by [Dano Wall](https://github.com/danowall)
+
 
 For more information visit:
 
 http://andydoro.com/ringclock/
-
 https://learn.adafruit.com/neopixel-60-ring-clock/overview
