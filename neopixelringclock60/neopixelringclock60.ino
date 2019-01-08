@@ -15,6 +15,7 @@
    20160916  AFD   Trinket compatible
    20170727  AFD   added STARTPIXEL for 3D enclosure, variable starting point, added automatic DST support
    20180424  AFD   using DST library https://github.com/andydoro/DST_RTC
+   20181231  AFD   nighttime dimming
 */
 
 // include the library code:
@@ -27,8 +28,6 @@
 // define pins
 #define NEOPIN 3
 
-#define BRIGHTNESS 64 // set max brightness
-
 #define STARTPIXEL 33 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
 
 RTC_DS1307 rtc; // Establish clock object
@@ -40,6 +39,17 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, NEOPIN, NEO_GRB + NEO_KHZ800); /
 
 byte pixelColorRed, pixelColorGreen, pixelColorBlue; // holds color values
 
+// nighttime dimming constants
+// brightness based on time of day- could try warmer colors at night?
+// 0-15
+#define DAYBRIGHTNESS 64
+#define NIGHTBRIGHTNESS 20
+
+// cutoff times for day / night brightness. feel free to modify.
+#define MORNINGCUTOFF 7  // when does daybrightness begin?   7am
+#define NIGHTCUTOFF 22 // when does nightbrightness begin? 10pm
+
+
 void setup () {
   Wire.begin();  // Begin I2C
   rtc.begin();   // begin clock
@@ -49,7 +59,7 @@ void setup () {
   pinMode(NEOPIN, OUTPUT);
 
   if (! rtc.isrunning()) {
-//    Serial.println("RTC is NOT running!");
+    //    Serial.println("RTC is NOT running!");
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(__DATE__, __TIME__));
     // DST? If we're in it, let's subtract an hour from the RTC time to keep our DST calculation correct. This gives us
@@ -65,7 +75,7 @@ void setup () {
   strip.begin();
   //strip.show(); // Initialize all pixels to 'off'
 
-  strip.setBrightness(BRIGHTNESS); // set brightness
+  strip.setBrightness(DAYBRIGHTNESS); // set brightness
 
   // startup sequence
   delay(500);
@@ -84,6 +94,17 @@ void loop () {
   byte secondval = theTime.second();  // get seconds
   byte minuteval = theTime.minute();  // get minutes
   int hourval = theTime.hour();   // get hours
+
+  // change brightness if it's night time
+  // check less often, once per minute
+  if (secondval == 0) {
+    if (hourval < MORNINGCUTOFF || hourval >= NIGHTCUTOFF) {
+      strip.setBrightness(NIGHTBRIGHTNESS);
+    } else {
+      strip.setBrightness(DAYBRIGHTNESS);
+    }
+  }
+
   hourval = hourval % 12; // This clock is 12 hour, if 13-23, convert to 0-11`
 
   hourval = (hourval * 60 + minuteval) / 12; //each red dot represent 24 minutes.
@@ -119,17 +140,10 @@ void loop () {
     strip.setPixelColor((i + STARTPIXEL) % 60, strip.Color(pixelColorRed, pixelColorGreen, pixelColorBlue));
   }
 
-  /*
-    // for serial debugging
-    Serial.print(hourval, DEC);
-    Serial.print(':');
-    Serial.print(minuteval, DEC);
-    Serial.print(':');
-    Serial.println(secondval, DEC);
-  */
-
   //display
   strip.show();
+
+  // printTheTime(theTime);
 
   // wait
   delay(100);
@@ -146,4 +160,3 @@ void colorWipe(uint32_t c, uint8_t wait) {
     delay(wait);
   }
 }
-
