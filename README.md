@@ -3,7 +3,7 @@ NeoPixel-60-Ring-Clock
 
 This project uses the DS1307 Real Time Clock with an Arduino to display the time as a series of colored arcs.
 
-With the new NeoPixel 60 Ring, we have a perfect display for presenting the time with RGB LEDs!
+With the NeoPixel 60 Ring, we have a perfect display for presenting the time with RGB LEDs!
 
 Hours are represented by red, minutes by green, seconds by blue. The arcs overlap and the colors mix. Minutes and seconds are each represented by a single green or blue LED, respectively. In the 12 hour version, a single red LED represent 24 minutes.
 
@@ -25,10 +25,10 @@ Required Libraries:
 * [DST_RTC](https://github.com/andydoro/DST_RTC)
 
 
-3D enclosure created by [Dano Wall](https://github.com/danowall)
+3D enclosure created by [arradan](https://www.thingiverse.com/arradan/about)
 
 
 For more information visit:
 
 http://andydoro.com/ringclock/
-https://learn.adafruit.com/neopixel-60-ring-clock/overview
+https://learn.adafruit.com/neopixel-60-ring-clock/
