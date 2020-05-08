@@ -28,10 +28,9 @@
 // define pins
 #define NEOPIN 3
 
-#define STARTPIXEL 33 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
+#define STARTPIXEL 0 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
 
 RTC_DS1307 rtc; // Establish clock object
-
 DST_RTC dst_rtc; // DST object
 
 
@@ -41,7 +40,6 @@ byte pixelColorRed, pixelColorGreen, pixelColorBlue; // holds color values
 
 // nighttime dimming constants
 // brightness based on time of day- could try warmer colors at night?
-// 0-15
 #define DAYBRIGHTNESS 64
 #define NIGHTBRIGHTNESS 20
 
