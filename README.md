@@ -30,5 +30,5 @@ Required Libraries:
 
 For more information visit:
 
-http://andydoro.com/ringclock/
+http://andydoro.com/ringclock/ \
 https://learn.adafruit.com/neopixel-60-ring-clock/
