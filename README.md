@@ -16,7 +16,7 @@ Hardware:
 -------
 
 * 4 x NeoPixel 1/4 60 Ring - so you can make a NeoPixel 60 Ring
-* DS1307 Real Time Clock breakout board kit
+* DS1307 Real Time Clock breakout board
 * Arduino Uno or other Arduino compatible microcontroller. This will even work with the Trinket 5V!
 * Adafruit Perma-Proto Half-sized Breadboard PCB
 
