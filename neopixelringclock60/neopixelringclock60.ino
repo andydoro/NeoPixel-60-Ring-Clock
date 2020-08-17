@@ -33,6 +33,9 @@
 RTC_DS1307 rtc; // Establish clock object
 DST_RTC dst_rtc; // DST object
 
+// Define US or EU rules for DST comment out as required. More countries could be added with different rules in DST_RTC.cpp
+const char rulesDST[] = "US"; // US DST rules
+// const char rulesDST[] = "EU";   // EU DST rules
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, NEOPIN, NEO_GRB + NEO_KHZ800); // strip object
 
