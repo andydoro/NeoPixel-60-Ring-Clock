@@ -31,7 +31,7 @@
 #define STARTPIXEL 0 // where do we start on the loop? use this to shift the arcs if the wiring does not start at the "12" point
 
 RTC_DS1307 rtc; // Establish clock object
-DST_RTC dst_rtc(0); // DST object
+DST_RTC dst_rtc(0); // DST object - 0 indicates US DST ruleset
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, NEOPIN, NEO_GRB + NEO_KHZ800); // strip object
 
